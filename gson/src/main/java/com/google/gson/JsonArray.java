@@ -172,6 +172,10 @@ public final class JsonArray extends JsonElement implements Iterable<JsonElement
     return elements.size();
   }
 
+  public boolean isEmpty(){
+    return elements.isEmpty();
+  }
+
   /**
    * Returns an iterator to navigate the elements of the array. Since the array is an ordered list,
    * the iterator navigates the elements in the order they were inserted.
@@ -374,7 +378,24 @@ public final class JsonArray extends JsonElement implements Iterable<JsonElement
 
   @Override
   public boolean equals(Object o) {
-    return (o == this) || (o instanceof JsonArray && ((JsonArray) o).elements.equals(elements));
+    if(o == this) return true;
+    if(o == null) return false;
+    if(o instanceof JsonArray){
+      JsonArray oArray = (JsonArray) o;
+      if(oArray.size() != this.size()) return false;
+      if(this.elements.equals(oArray.elements)) return true; //Simple List<> comparison, regardless the order
+      JsonArray oTemp = oArray.deepCopy(), thisTemp = this.deepCopy();
+      for (JsonElement compareElement : oArray) {
+        for (JsonElement thisElement : this) {
+          if(thisElement.equals(compareElement)){
+            oTemp.remove(compareElement);
+            thisTemp.remove(thisElement);
+          }
+        }
+      }
+      return oTemp.isEmpty() && thisTemp.isEmpty();
+    }
+    return false;
   }
 
   @Override

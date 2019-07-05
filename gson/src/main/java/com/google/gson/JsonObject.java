@@ -231,13 +231,13 @@ public final class JsonObject extends JsonElement {
     if(o == this) return true;
     if(o == null) return false;
     if(o instanceof JsonObject){
-      JsonObject jsonObject = (JsonObject) o;
-      if(jsonObject.size() != this.size()) return false;
+      JsonObject oObject = (JsonObject) o;
+      if(oObject.size() != this.size()) return false;
       if(!members.isEmpty()){
         for(Map.Entry<String,JsonElement> entry : members.entrySet()){
           String key = entry.getKey();
           JsonElement value = entry.getValue();
-          if(value == null || value.equals(jsonObject.get(key)))
+          if(value == null || !value.equals(oObject.get(key)))
             return false;
         }
       }
